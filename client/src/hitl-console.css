@@ -58,6 +58,40 @@ body,
   flex-shrink: 0;
 }
 
+.hitl-reviewer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.hitl-reviewer-field label {
+  font-size: 11px;
+  color: #6b7785;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hitl-reviewer-input {
+  background: #0f1620;
+  border: 1px solid #2b3644;
+  border-radius: 7px;
+  color: #e6edf3;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 6px 10px;
+  width: 30ch;
+  min-width: 280px;
+  max-width: 100%;
+  outline: none;
+}
+
+.hitl-reviewer-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
 .hitl-work-surface {
   flex: 1;
   min-height: 0;

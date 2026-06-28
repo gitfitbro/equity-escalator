@@ -672,24 +672,16 @@ export default function HitlReviewConsole() {
             flexWrap: 'wrap',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-            <label style={{ fontSize: 11, color: '#6b7785', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              Reviewer identity
-            </label>
+          <div className="hitl-reviewer-field">
+            <label htmlFor="reviewer-email">Reviewer identity</label>
             <input
+              id="reviewer-email"
+              className="hitl-reviewer-input"
+              type="email"
               value={reviewer}
               onChange={(e) => setReviewer(e.target.value)}
-              style={{
-                background: '#0f1620',
-                border: '1px solid #2b3644',
-                borderRadius: 7,
-                color: '#e6edf3',
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 12.5,
-                padding: '6px 10px',
-                width: 210,
-                outline: 'none',
-              }}
+              spellCheck={false}
+              autoComplete="email"
             />
           </div>
 
