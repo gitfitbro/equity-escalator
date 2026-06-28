@@ -10,6 +10,12 @@ import {
   ingestRecord,
   reviewItem,
 } from './store.js';
+import {
+  getSpcxValuation,
+  SPACEX_SAMPLE_GRANTS,
+  spcxGrantToRecord,
+  type SpcxGrantInput,
+} from './spcx-model.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -23,6 +29,63 @@ app.get('/health', (_req, res) => {
 
 app.get('/config', (_req, res) => {
   res.json({ gate: getGateConfig() });
+});
+
+/** GET /spcx — current 409A valuation model for SpaceX common (SPCX) */
+app.get('/spcx', (_req, res) => {
+  res.json(getSpcxValuation());
+});
+
+/**
+ * POST /spcx/issue — issue SPCX units to an employee, value at 409A, run HITL
+ * Body: { employeeId, employeeName, awardType, grantDate, spcxUnits, ... }
+ */
+app.post('/spcx/issue', (req, res) => {
+  const input = req.body as SpcxGrantInput;
+
+  if (!input?.employeeId || !input?.awardType || !input?.spcxUnits) {
+    res.status(400).json({
+      error: 'employeeId, awardType, and spcxUnits are required',
+    });
+    return;
+  }
+
+  const record = spcxGrantToRecord({
+    ...input,
+    grantDate: input.grantDate ?? new Date().toISOString().slice(0, 10),
+  });
+
+  const item = ingestRecord(record);
+  const routing =
+    item.status === 'auto_approved' ? 'auto_approved' : 'needs_review';
+
+  res.status(201).json({
+    valuation: getSpcxValuation(),
+    record,
+    item,
+    routing,
+  });
+});
+
+/** POST /spcx/seed — load illustrative SpaceX grant batch */
+app.post('/spcx/seed', (_req, res) => {
+  const results = SPACEX_SAMPLE_GRANTS.map((grant) => {
+    const record = spcxGrantToRecord(grant);
+    const item = ingestRecord(record);
+    return {
+      employee: grant.employeeName,
+      spcxUnits: grant.spcxUnits,
+      fairValue: record.fairValue,
+      routing: item.status === 'auto_approved' ? 'auto_approved' : 'needs_review',
+    };
+  });
+
+  res.status(201).json({
+    valuation: getSpcxValuation(),
+    issued: results,
+    autoApproved: results.filter((r) => r.routing === 'auto_approved').length,
+    needsReview: results.filter((r) => r.routing === 'needs_review').length,
+  });
 });
 
 /** POST /ingest — accept structured equity record, classify, route */

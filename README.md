@@ -30,7 +30,11 @@ npm test             # coding challenges
 npm run tsr          # Monte Carlo TSR demo
 ```
 
-Open http://localhost:5173 → click **Seed sample awards** → review the queue.
+Open http://localhost:5173 → click **Issue SpaceX SPCX grants** → review the queue.
+
+### SpaceX SPCX Demo
+
+**SPCX** = illustrative SpaceX common-share unit (private company, no public ticker). Grants are valued at 409A FMV × units, then run through the HITL gate. See `docs/SPCX-MODEL.md`.
 
 ---
 
@@ -62,6 +66,9 @@ ELSE                                → auto-proceed
 | `POST` | `/review/:id` | Approve, override, or reject |
 | `GET` | `/audit` | Append-only audit log |
 | `GET` | `/config` | Current gate thresholds |
+| `GET` | `/spcx` | 409A valuation model for SPCX |
+| `POST` | `/spcx/issue` | Issue SPCX units to an employee |
+| `POST` | `/spcx/seed` | Load 4 illustrative SpaceX grants |
 
 ### Sample Ingest
 

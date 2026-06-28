@@ -2,38 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   fetchAudit,
   fetchQueue,
-  ingestSample,
+  fetchSpcxModel,
+  seedSpaceXGrants,
   submitReview,
   type AuditEntry,
   type ReviewItem,
+  type SpcxValuation,
 } from './api';
-
-const SAMPLE_RECORDS = [
-  {
-    employeeId: 'E-1042',
-    employeeName: 'Jordan Chen',
-    awardType: 'RSU',
-    grantDate: '2025-03-15',
-    units: 5000,
-    fairValue: 42500,
-  },
-  {
-    employeeId: 'E-2088',
-    employeeName: 'Morgan Patel',
-    awardType: 'performance stock unit',
-    grantDate: '2025-01-10',
-    units: 12000,
-    fairValue: 580000,
-  },
-  {
-    employeeId: 'E-3011',
-    employeeName: 'Alex Rivera',
-    awardType: 'weird_grant_type',
-    grantDate: '2024-11-01',
-    units: 800,
-    fairValue: 22000,
-  },
-];
 
 function confidenceClass(c: number): string {
   if (c < 0.7) return 'low';
@@ -41,16 +16,29 @@ function confidenceClass(c: number): string {
   return 'high';
 }
 
+function formatMoney(n: number): string {
+  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)}B`;
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  return `$${n.toLocaleString()}`;
+}
+
 export default function App() {
   const [queue, setQueue] = useState<ReviewItem[]>([]);
   const [audit, setAudit] = useState<AuditEntry[]>([]);
+  const [spcx, setSpcx] = useState<SpcxValuation | null>(null);
   const [reviewer, setReviewer] = useState('consultant@equitymethods.com');
   const [loading, setLoading] = useState(true);
+  const [seedStatus, setSeedStatus] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const [q, a] = await Promise.all([fetchQueue(), fetchAudit()]);
+    const [q, a, model] = await Promise.all([
+      fetchQueue(),
+      fetchAudit(),
+      fetchSpcxModel(),
+    ]);
     setQueue(q);
     setAudit(a);
+    setSpcx(model);
     setLoading(false);
   }, []);
 
@@ -69,10 +57,11 @@ export default function App() {
     await refresh();
   }
 
-  async function seedSamples() {
-    for (const record of SAMPLE_RECORDS) {
-      await ingestSample(record);
-    }
+  async function handleSeedSpaceX() {
+    const result = await seedSpaceXGrants();
+    setSeedStatus(
+      `Issued 4 SPCX grants — ${result.autoApproved} auto-approved, ${result.needsReview} escalated`,
+    );
     await refresh();
   }
 
@@ -80,11 +69,11 @@ export default function App() {
     <div className="app">
       <header>
         <h1>
-          <span>Equity Escalator</span> — HITL Review Loop
+          <span>Equity Escalator</span> — SpaceX SPCX Review
         </h1>
         <p className="subtitle">
-          Agent classifies → confidence/risk gate routes → consultant approves or
-          overrides → append-only audit trail
+          Issue SPCX units at 409A FMV → agent classifies grant → confidence/risk
+          gate → consultant approves → audit trail
         </p>
         <div className="gate-banner">
           <span>
@@ -94,6 +83,33 @@ export default function App() {
           <span>ELSE → auto-proceed</span>
         </div>
       </header>
+
+      {spcx && (
+        <section className="spcx-panel">
+          <div className="spcx-header">
+            <div>
+              <span className="spcx-ticker">{spcx.ticker}</span>
+              <span className="spcx-issuer">{spcx.issuer} Common</span>
+            </div>
+            <span className="spcx-badge">{spcx.method} · {spcx.valuationDate}</span>
+          </div>
+          <div className="spcx-stats">
+            <div className="spcx-stat">
+              <span className="label">FMV / share</span>
+              <span className="value">${spcx.fmvPerShare.toFixed(2)}</span>
+            </div>
+            <div className="spcx-stat">
+              <span className="label">Outstanding</span>
+              <span className="value">{(spcx.totalOutstandingShares / 1e6).toFixed(0)}M sh</span>
+            </div>
+            <div className="spcx-stat">
+              <span className="label">Implied equity</span>
+              <span className="value">{formatMoney(spcx.impliedEquityValue)}</span>
+            </div>
+          </div>
+          <p className="spcx-note">{spcx.note}</p>
+        </section>
+      )}
 
       <div className="reviewer-input">
         <label htmlFor="reviewer">Reviewer</label>
@@ -106,11 +122,12 @@ export default function App() {
       </div>
 
       <div className="toolbar">
-        <button className="primary" onClick={seedSamples}>
-          Seed sample awards
+        <button className="primary" onClick={handleSeedSpaceX}>
+          Issue SpaceX SPCX grants
         </button>
         <button onClick={refresh}>Refresh</button>
       </div>
+      {seedStatus && <p className="seed-status">{seedStatus}</p>}
 
       <div className="layout">
         <section className="panel">
@@ -123,15 +140,16 @@ export default function App() {
             <div className="empty">Loading…</div>
           ) : queue.length === 0 ? (
             <div className="empty">
-              Queue empty — seed samples or POST to /ingest
+              Queue empty — click &quot;Issue SpaceX SPCX grants&quot; to demo
             </div>
           ) : (
             <table>
               <thead>
                 <tr>
                   <th>Employee</th>
-                  <th>Award</th>
-                  <th>Value</th>
+                  <th>Grant</th>
+                  <th>SPCX Units</th>
+                  <th>Fair Value</th>
                   <th>Prediction</th>
                   <th>Confidence</th>
                   <th>Risk</th>
@@ -143,14 +161,16 @@ export default function App() {
                   <tr key={item.id}>
                     <td>
                       <div>{item.record.employeeName}</div>
-                      <div style={{ color: 'var(--muted)', fontSize: '0.75rem' }}>
+                      <div className="meta">
                         {item.record.employeeId}
+                        {item.record.department && ` · ${item.record.department}`}
                       </div>
                     </td>
                     <td>{item.record.awardType}</td>
-                    <td>
-                      ${item.record.fairValue.toLocaleString()}
+                    <td className="mono">
+                      {(item.record.spcxUnits ?? item.record.units).toLocaleString()}
                     </td>
+                    <td>${item.record.fairValue.toLocaleString()}</td>
                     <td>{item.classification.label}</td>
                     <td>
                       <span
@@ -209,9 +229,7 @@ export default function App() {
                     {new Date(entry.timestamp).toLocaleTimeString()}
                   </div>
                   <div className="event">{entry.eventType}</div>
-                  <div className="detail">
-                    item {entry.itemId.slice(0, 8)}…
-                  </div>
+                  <div className="detail">item {entry.itemId.slice(0, 8)}…</div>
                 </div>
               ))
             )}

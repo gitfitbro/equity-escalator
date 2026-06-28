@@ -301,3 +301,84 @@ button.danger {
   color: var(--text);
   font-family: var(--sans);
 }
+
+.spcx-panel {
+  background: linear-gradient(135deg, #1a2332 0%, #1e2a3d 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.spcx-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.spcx-ticker {
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-right: 0.75rem;
+}
+
+.spcx-issuer {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.spcx-badge {
+  font-size: 0.75rem;
+  font-family: var(--mono);
+  color: var(--muted);
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.spcx-stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.spcx-stat .label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+.spcx-stat .value {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.spcx-note {
+  margin-top: 0.85rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.seed-status {
+  font-size: 0.85rem;
+  color: var(--success);
+  margin-bottom: 1rem;
+}
+
+.meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}

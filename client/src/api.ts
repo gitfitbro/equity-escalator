@@ -1,5 +1,16 @@
 const API = '/api';
 
+export interface SpcxValuation {
+  ticker: string;
+  issuer: string;
+  fmvPerShare: number;
+  valuationDate: string;
+  method: string;
+  totalOutstandingShares: number;
+  impliedEquityValue: number;
+  note: string;
+}
+
 export interface ReviewItem {
   id: string;
   record: {
@@ -9,6 +20,11 @@ export interface ReviewItem {
     grantDate: string;
     units: number;
     fairValue: number;
+    issuer?: string;
+    ticker?: string;
+    spcxUnits?: number;
+    fmvPerShare?: number;
+    department?: string;
   };
   classification: {
     label: string;
@@ -62,4 +78,21 @@ export async function ingestSample(record: Record<string, unknown>): Promise<voi
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(record),
   });
+}
+
+export async function fetchSpcxModel(): Promise<SpcxValuation> {
+  const res = await fetch(`${API}/spcx`);
+  return res.json();
+}
+
+export async function seedSpaceXGrants(): Promise<{
+  autoApproved: number;
+  needsReview: number;
+}> {
+  const res = await fetch(`${API}/spcx/seed`, { method: 'POST' });
+  const data = await res.json();
+  return {
+    autoApproved: data.autoApproved,
+    needsReview: data.needsReview,
+  };
 }

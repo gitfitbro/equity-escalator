@@ -10,8 +10,9 @@ function normalizeAwardType(raw: string): AwardType {
   }
   if (upper.includes('RESTRICTED') || upper.includes('RSU')) return 'RSU';
   if (upper.includes('PERFORMANCE') || upper.includes('PSU')) return 'PSU';
-  if (upper.includes('OPTION')) return 'OPTION';
+  if (upper.includes('STOCK OPTION') || upper.includes('OPTION')) return 'OPTION';
   if (upper.includes('CASH')) return 'CASH';
+  if (upper.includes('PHANTOM') || upper.includes('STARLINK')) return 'UNKNOWN';
   return 'UNKNOWN';
 }
 
@@ -51,10 +52,11 @@ export function classifyRecord(record: EquityRecord): ClassificationResult {
   const risk = assessRisk(record, label);
   const provenanceRef = `cls-${randomUUID()}`;
 
+  const issuerTag = record.issuer ? ` [${record.ticker ?? record.issuer}]` : '';
   const rationale =
     label === 'UNKNOWN'
-      ? 'Award type could not be mapped to a known category'
-      : `Mapped "${record.awardType}" → ${label} (confidence ${confidence}, risk ${risk})`;
+      ? `Award type could not be mapped to a known category${issuerTag}`
+      : `Mapped "${record.awardType}" → ${label}${issuerTag} (confidence ${confidence}, risk ${risk})`;
 
   return { label, confidence, risk, rationale, provenanceRef };
 }

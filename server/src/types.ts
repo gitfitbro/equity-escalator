@@ -17,6 +17,13 @@ export interface EquityRecord {
   units: number;
   fairValue: number;
   vestingSchedule?: string;
+  /** Issuer — e.g. SpaceX in SPCX demo grants */
+  issuer?: string;
+  /** Share-class symbol — SPCX = illustrative SpaceX common unit */
+  ticker?: string;
+  spcxUnits?: number;
+  fmvPerShare?: number;
+  department?: string;
 }
 
 export interface ClassificationResult {
