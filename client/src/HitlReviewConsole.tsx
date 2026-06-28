@@ -431,18 +431,9 @@ export default function HitlReviewConsole() {
 
   return (
     <div className="hitl-root">
-      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div className="hitl-shell">
         {/* ORIENTATION */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            gap: 24,
-            flexWrap: 'wrap',
-            marginBottom: 18,
-          }}
-        >
+        <div className="hitl-header">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
               <div
@@ -457,7 +448,7 @@ export default function HitlReviewConsole() {
               <h1
                 style={{
                   margin: 0,
-                  fontSize: 21,
+                  fontSize: 18,
                   fontWeight: 700,
                   letterSpacing: '-0.01em',
                 }}
@@ -480,14 +471,13 @@ export default function HitlReviewConsole() {
             </div>
             <p
               style={{
-                margin: '7px 0 0',
+                margin: '4px 0 0',
                 color: '#8b98a8',
-                fontSize: 13,
-                maxWidth: 660,
+                fontSize: 12,
+                maxWidth: 560,
               }}
             >
-              Agentic ASC 718 classification → confidence/risk gate → preparer
-              review → manager sign-off. SpaceX (SPCX) 409A batch.
+              ASC 718 → gate → consultant → reviewer · SPCX 409A batch
             </p>
           </div>
           <div
@@ -549,6 +539,7 @@ export default function HitlReviewConsole() {
           </div>
         </div>
 
+        <div className="hitl-context-row">
         {/* GATE BANNER */}
         <div
           style={{
@@ -556,19 +547,19 @@ export default function HitlReviewConsole() {
             border: '1px solid #232c38',
             borderLeft: '3px solid #d29922',
             borderRadius: 8,
-            padding: '13px 16px',
-            marginBottom: 16,
+            padding: '8px 12px',
             overflowX: 'auto',
+            height: '100%',
           }}
         >
           <div
             style={{
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 10,
+              fontSize: 9,
               letterSpacing: '0.13em',
               color: '#6b7785',
               textTransform: 'uppercase',
-              marginBottom: 9,
+              marginBottom: 6,
             }}
           >
             HITL routing gate
@@ -576,12 +567,12 @@ export default function HitlReviewConsole() {
           <div
             style={{
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 13,
-              lineHeight: 1.85,
+              fontSize: 11,
+              lineHeight: 1.6,
               color: '#c9d4df',
               display: 'flex',
               flexDirection: 'column',
-              gap: 3,
+              gap: 2,
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap' }}>
@@ -608,23 +599,27 @@ export default function HitlReviewConsole() {
           </div>
         </div>
 
-        {/* VALUATION PANEL */}
+        {/* VALUATION PANEL — compact */}
         <div
           style={{
             background: 'linear-gradient(135deg,#161e29 0%,#131922 60%,#141b25 100%)',
             border: '1px solid #232c38',
-            borderRadius: 10,
-            padding: '18px 20px',
-            marginBottom: 16,
+            borderRadius: 8,
+            padding: '8px 12px',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: 8,
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div
                 style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: 9,
+                  width: 34,
+                  height: 34,
+                  borderRadius: 7,
                   background: '#0f1419',
                   border: '1px solid #2b3644',
                   display: 'flex',
@@ -632,57 +627,56 @@ export default function HitlReviewConsole() {
                   justifyContent: 'center',
                   fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: 700,
-                  fontSize: 15,
+                  fontSize: 12,
                   color: ACCENT,
                 }}
               >
                 SPCX
               </div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 600 }}>SpaceX Common</div>
-                <div style={{ color: '#8b98a8', fontSize: 12.5, marginTop: 1 }}>
-                  Private · Section 409A fair-value anchor
-                </div>
+                <div style={{ fontSize: 13, fontWeight: 600 }}>SpaceX Common</div>
+                <div style={{ color: '#5c6775', fontSize: 10.5 }}>409A illustrative · not a valuation opinion</div>
               </div>
             </div>
             <div
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 11.5,
+                fontSize: 10,
                 color: '#3fb950',
                 background: 'rgba(63,185,80,0.1)',
                 border: '1px solid rgba(63,185,80,0.25)',
-                borderRadius: 6,
-                padding: '5px 10px',
+                borderRadius: 5,
+                padding: '3px 8px',
+                whiteSpace: 'nowrap',
               }}
             >
-              409A · eff. Mar 31 2026
+              eff. Mar 31 2026
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginTop: 18 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
             {[
-              ['FMV / share', '$112.00'],
-              ['Shares outstanding', '1.74B'],
-              ['Implied equity value', '$194.9B'],
+              ['FMV / sh', '$112.00'],
+              ['Outstanding', '1.74B'],
+              ['Implied', '$194.9B'],
             ].map(([label, value]) => (
               <div
                 key={label}
                 style={{
                   background: '#0f1620',
                   border: '1px solid #222c38',
-                  borderRadius: 8,
-                  padding: '13px 15px',
+                  borderRadius: 6,
+                  padding: '6px 10px',
                 }}
               >
-                <div style={{ color: '#6b7785', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <div style={{ color: '#6b7785', fontSize: 9, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                   {label}
                 </div>
                 <div
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 22,
+                    fontSize: 15,
                     fontWeight: 600,
-                    marginTop: 5,
+                    marginTop: 2,
                   }}
                 >
                   {value}
@@ -690,21 +684,19 @@ export default function HitlReviewConsole() {
               </div>
             ))}
           </div>
-          <div style={{ fontStyle: 'italic', color: '#5c6775', fontSize: 11.5, marginTop: 13 }}>
-            Illustrative 409A inputs for demonstration only. Not a valuation opinion.
-          </div>
+        </div>
         </div>
 
         {/* CONTROLS */}
         <div
+          className="hitl-controls"
           style={{
             background: '#141a22',
             border: '1px solid #232c38',
-            borderRadius: 10,
-            padding: '16px 18px',
-            marginBottom: 16,
+            borderRadius: 8,
+            padding: '8px 12px',
             display: 'flex',
-            gap: 22,
+            gap: 14,
             alignItems: 'center',
             flexWrap: 'wrap',
           }}
@@ -723,8 +715,8 @@ export default function HitlReviewConsole() {
                 color: '#e6edf3',
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 12.5,
-                padding: '8px 11px',
-                width: 240,
+                padding: '6px 10px',
+                width: 210,
                 outline: 'none',
               }}
             />
@@ -774,7 +766,7 @@ export default function HitlReviewConsole() {
                   fontFamily: 'DM Sans, sans-serif',
                   fontWeight: 600,
                   fontSize: 13,
-                  padding: '10px 16px',
+                  padding: '8px 12px',
                   cursor: 'pointer',
                 }}
               >
@@ -790,7 +782,7 @@ export default function HitlReviewConsole() {
                   borderRadius: 8,
                   fontWeight: 500,
                   fontSize: 13,
-                  padding: '10px 14px',
+                  padding: '8px 12px',
                   cursor: 'pointer',
                 }}
               >
@@ -816,33 +808,18 @@ export default function HitlReviewConsole() {
         </div>
 
         {/* WORK SURFACE */}
-        <div
-          className="hitl-work-surface"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 340px',
-            gap: 18,
-            alignItems: 'start',
-          }}
-        >
+        <div className="hitl-work-surface">
           {/* QUEUE */}
-          <div
-            style={{
-              background: '#141a22',
-              border: '1px solid #232c38',
-              borderRadius: 10,
-              overflow: 'hidden',
-              minWidth: 0,
-            }}
-          >
+          <div className="hitl-queue-panel">
             <div
+              className="hitl-queue-header"
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '14px 18px',
+                padding: '10px 14px',
                 borderBottom: '1px solid #222c38',
-                gap: 12,
+                gap: 10,
                 flexWrap: 'wrap',
               }}
             >
@@ -878,29 +855,33 @@ export default function HitlReviewConsole() {
             </div>
 
             {hasQueue ? (
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+              <div className="hitl-queue-scroll">
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
                   <thead>
                     <tr
                       style={{
                         color: '#6b7785',
-                        fontSize: 10.5,
+                        fontSize: 10,
                         letterSpacing: '0.05em',
                         textTransform: 'uppercase',
                         textAlign: 'left',
+                        position: 'sticky',
+                        top: 0,
+                        background: '#141a22',
+                        zIndex: 1,
                       }}
                     >
-                      <th style={{ padding: '11px 14px', fontWeight: 500 }}>Employee</th>
-                      <th style={{ padding: '11px 10px', fontWeight: 500 }}>Grant (raw → agent)</th>
-                      <th style={{ padding: '11px 10px', fontWeight: 500, textAlign: 'right' }}>
-                        SPCX units / FV
+                      <th style={{ padding: '8px 12px', fontWeight: 500 }}>Employee</th>
+                      <th style={{ padding: '8px 8px', fontWeight: 500 }}>Grant (raw → agent)</th>
+                      <th style={{ padding: '8px 8px', fontWeight: 500, textAlign: 'right' }}>
+                        SPCX / FV
                       </th>
-                      <th style={{ padding: '11px 10px', fontWeight: 500 }}>Confidence</th>
-                      <th style={{ padding: '11px 10px', fontWeight: 500 }}>Risk</th>
-                      <th style={{ padding: '11px 10px', fontWeight: 500 }}>
-                        {isConsultant ? 'Why escalated (ASC 718)' : 'Provenance'}
+                      <th style={{ padding: '8px 8px', fontWeight: 500 }}>Conf</th>
+                      <th style={{ padding: '8px 8px', fontWeight: 500 }}>Risk</th>
+                      <th style={{ padding: '8px 8px', fontWeight: 500 }}>
+                        {isConsultant ? 'Why escalated' : 'Provenance'}
                       </th>
-                      <th style={{ padding: '11px 14px', fontWeight: 500, textAlign: 'right' }}>
+                      <th style={{ padding: '8px 12px', fontWeight: 500, textAlign: 'right' }}>
                         Decision
                       </th>
                     </tr>
@@ -915,7 +896,7 @@ export default function HitlReviewConsole() {
                           transform: item.leaving ? 'translateX(14px)' : 'none',
                         }}
                       >
-                        <td style={{ padding: '13px 14px', borderTop: '1px solid #1d2630', verticalAlign: 'top' }}>
+                        <td style={{ padding: '10px 12px', borderTop: '1px solid #1d2630', verticalAlign: 'top' }}>
                           <div style={{ fontWeight: 600, color: '#e6edf3' }}>{item.employee}</div>
                           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7785', marginTop: 2 }}>
                             {item.meta}
@@ -923,7 +904,7 @@ export default function HitlReviewConsole() {
                         </td>
                         <td
                           style={{
-                            padding: '13px 10px',
+                            padding: '10px 8px',
                             borderTop: '1px solid #1d2630',
                             verticalAlign: 'top',
                             fontFamily: "'JetBrains Mono', monospace",
@@ -943,7 +924,7 @@ export default function HitlReviewConsole() {
                         </td>
                         <td
                           style={{
-                            padding: '13px 10px',
+                            padding: '10px 8px',
                             borderTop: '1px solid #1d2630',
                             verticalAlign: 'top',
                             textAlign: 'right',
@@ -954,7 +935,7 @@ export default function HitlReviewConsole() {
                           <div style={{ color: '#c9d4df' }}>{item.units}</div>
                           <div style={{ color: '#7d8896', fontSize: 11.5, marginTop: 2 }}>{item.fair}</div>
                         </td>
-                        <td style={{ padding: '13px 10px', borderTop: '1px solid #1d2630', verticalAlign: 'top' }}>
+                        <td style={{ padding: '10px 8px', borderTop: '1px solid #1d2630', verticalAlign: 'top' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div
                               style={{
@@ -987,7 +968,7 @@ export default function HitlReviewConsole() {
                             </span>
                           </div>
                         </td>
-                        <td style={{ padding: '13px 10px', borderTop: '1px solid #1d2630', verticalAlign: 'top' }}>
+                        <td style={{ padding: '10px 8px', borderTop: '1px solid #1d2630', verticalAlign: 'top' }}>
                           <span
                             style={{
                               fontFamily: "'JetBrains Mono', monospace",
@@ -1004,7 +985,7 @@ export default function HitlReviewConsole() {
                         </td>
                         <td
                           style={{
-                            padding: '13px 10px',
+                            padding: '10px 8px',
                             borderTop: '1px solid #1d2630',
                             verticalAlign: 'top',
                             minWidth: 196,
@@ -1048,7 +1029,7 @@ export default function HitlReviewConsole() {
                         </td>
                         <td
                           style={{
-                            padding: '13px 14px',
+                            padding: '10px 12px',
                             borderTop: '1px solid #1d2630',
                             verticalAlign: 'top',
                             textAlign: 'right',
@@ -1085,18 +1066,18 @@ export default function HitlReviewConsole() {
                 </table>
               </div>
             ) : (
-              <div style={{ padding: '54px 24px', textAlign: 'center' }}>
+              <div className="hitl-empty-state hitl-queue-scroll">
                 <div
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 34,
+                    fontSize: 28,
                     color: '#2b3644',
-                    marginBottom: 14,
+                    marginBottom: 10,
                   }}
                 >
                   {'{ }'}
                 </div>
-                <div style={{ color: '#8b98a8', fontSize: 13.5, maxWidth: 420, margin: '0 auto' }}>
+                <div style={{ color: '#8b98a8', fontSize: 12.5, maxWidth: 360, margin: '0 auto' }}>
                   {emptyMsg}
                 </div>
               </div>
@@ -1104,22 +1085,14 @@ export default function HitlReviewConsole() {
           </div>
 
           {/* AUDIT SIDEBAR */}
-          <div
-            style={{
-              background: '#141a22',
-              border: '1px solid #232c38',
-              borderRadius: 10,
-              position: 'sticky',
-              top: 16,
-              overflow: 'hidden',
-            }}
-          >
+          <div className="hitl-audit-panel">
             <div
+              className="hitl-audit-header"
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '14px 16px',
+                padding: '10px 12px',
                 borderBottom: '1px solid #222c38',
               }}
             >
@@ -1137,7 +1110,7 @@ export default function HitlReviewConsole() {
                 chain of custody
               </span>
             </div>
-            <div style={{ maxHeight: 540, overflowY: 'auto', padding: '6px 6px 10px' }}>
+            <div className="hitl-audit-scroll">
               {audit.length > 0 ? (
                 audit.map((ev, i) => (
                   <div
@@ -1176,28 +1149,18 @@ export default function HitlReviewConsole() {
                   </div>
                 ))
               ) : (
-                <div
-                  style={{
-                    minHeight: 360,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                    padding: '24px 18px',
-                  }}
-                >
+                <div className="hitl-empty-state">
                   <div
                     style={{
                       fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 34,
+                      fontSize: 28,
                       color: '#2b3644',
-                      marginBottom: 14,
+                      marginBottom: 10,
                     }}
                   >
                     {'{ }'}
                   </div>
-                  <div style={{ color: '#8b98a8', fontSize: 13, maxWidth: 220, lineHeight: 1.5 }}>
+                  <div style={{ color: '#8b98a8', fontSize: 12, maxWidth: 200, lineHeight: 1.5, margin: '0 auto' }}>
                     No events yet. Issue a batch to populate the chain of custody.
                   </div>
                 </div>
