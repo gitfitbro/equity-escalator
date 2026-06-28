@@ -151,6 +151,104 @@ body,
   text-align: center;
 }
 
+/* HITL routing gate pills */
+.hitl-gate {
+  background: #12181f;
+  border: 1px solid #232c38;
+  border-left: 3px solid #d29922;
+  border-radius: 8px;
+  padding: 8px 12px;
+  overflow-x: auto;
+  height: 100%;
+}
+
+.hitl-gate-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  color: #6b7785;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.hitl-gate-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hitl-gate-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+.hitl-gate-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.hitl-gate-pill--keyword {
+  color: #e8b84a;
+  background: rgba(210, 153, 34, 0.14);
+  border-color: rgba(210, 153, 34, 0.38);
+  min-width: 36px;
+  text-align: center;
+}
+
+.hitl-gate-pill--risk {
+  color: #f85149;
+  background: rgba(248, 81, 73, 0.12);
+  border-color: rgba(248, 81, 73, 0.32);
+}
+
+.hitl-gate-pill--logic {
+  color: #9aa7b5;
+  background: rgba(122, 134, 148, 0.1);
+  border-color: rgba(122, 134, 148, 0.28);
+  font-weight: 500;
+  padding: 4px 7px;
+}
+
+.hitl-gate-pill--conf {
+  color: #7fa8e6;
+  background: rgba(91, 135, 196, 0.14);
+  border-color: rgba(91, 135, 196, 0.34);
+}
+
+.hitl-gate-pill--escalate {
+  color: #f0883e;
+  background: rgba(240, 136, 62, 0.14);
+  border-color: rgba(240, 136, 62, 0.36);
+}
+
+.hitl-gate-pill--approve {
+  color: #3fb950;
+  background: rgba(63, 185, 80, 0.13);
+  border-color: rgba(63, 185, 80, 0.34);
+}
+
+.hitl-gate-pill--review {
+  color: #8b9cb3;
+  background: rgba(139, 156, 179, 0.1);
+  border-color: rgba(139, 156, 179, 0.28);
+}
+
+.hitl-gate-arrow {
+  color: #5c6775;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 2px;
+}
+
 @media (max-width: 1000px) {
   .hitl-context-row {
     grid-template-columns: 1fr;

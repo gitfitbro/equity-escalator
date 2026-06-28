@@ -541,60 +541,31 @@ export default function HitlReviewConsole() {
 
         <div className="hitl-context-row">
         {/* GATE BANNER */}
-        <div
-          style={{
-            background: '#12181f',
-            border: '1px solid #232c38',
-            borderLeft: '3px solid #d29922',
-            borderRadius: 8,
-            padding: '8px 12px',
-            overflowX: 'auto',
-            height: '100%',
-          }}
-        >
-          <div
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 9,
-              letterSpacing: '0.13em',
-              color: '#6b7785',
-              textTransform: 'uppercase',
-              marginBottom: 6,
-            }}
-          >
-            HITL routing gate
-          </div>
-          <div
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 11,
-              lineHeight: 1.6,
-              color: '#c9d4df',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap' }}>
-              <span style={{ display: 'inline-block', minWidth: 42, color: '#d29922', fontWeight: 600 }}>IF</span>
-              <span>
-                (risk or $ value high){' '}
-                <span style={{ color: '#d29922', fontWeight: 600 }}>OR</span> (confidence{' '}
-                <span style={{ color: '#7d8896' }}>&lt;</span> threshold)
+        <div className="hitl-gate">
+          <div className="hitl-gate-label">HITL routing gate</div>
+          <div className="hitl-gate-flow">
+            <div className="hitl-gate-row">
+              <span className="hitl-gate-pill hitl-gate-pill--keyword">IF</span>
+              <span className="hitl-gate-pill hitl-gate-pill--risk">risk: high</span>
+              <span className="hitl-gate-pill hitl-gate-pill--logic">OR</span>
+              <span className="hitl-gate-pill hitl-gate-pill--risk">$ value: high</span>
+              <span className="hitl-gate-pill hitl-gate-pill--logic">OR</span>
+              <span className="hitl-gate-pill hitl-gate-pill--conf">
+                confidence &lt; {threshold}%
               </span>
-              <span style={{ color: '#7d8896' }}>→</span>
-              <span style={{ color: '#f0883e', background: 'rgba(240,136,62,0.13)', padding: '1px 7px', borderRadius: 4 }}>
+              <span className="hitl-gate-arrow">→</span>
+              <span className="hitl-gate-pill hitl-gate-pill--escalate">
                 route to consultant
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, whiteSpace: 'nowrap' }}>
-              <span style={{ display: 'inline-block', minWidth: 42, color: '#d29922', fontWeight: 600 }}>ELSE</span>
-              <span style={{ color: '#7d8896' }}>→</span>
-              <span style={{ color: '#3fb950', background: 'rgba(63,185,80,0.12)', padding: '1px 7px', borderRadius: 4 }}>
-                auto-approve
+            <div className="hitl-gate-row">
+              <span className="hitl-gate-pill hitl-gate-pill--keyword">ELSE</span>
+              <span className="hitl-gate-arrow">→</span>
+              <span className="hitl-gate-pill hitl-gate-pill--approve">auto-approve</span>
+              <span className="hitl-gate-arrow">→</span>
+              <span className="hitl-gate-pill hitl-gate-pill--review">
+                manager spot-check
               </span>
-              <span style={{ color: '#7d8896' }}>→</span>
-              <span style={{ color: '#9aa7b5' }}>still surfaces to manager for spot-check</span>
             </div>
           </div>
         </div>
