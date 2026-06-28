@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+.hitl-root * {
+  box-sizing: border-box;
+}
+
+.hitl-root {
+  min-height: 100vh;
+  background: #0f1419;
+  color: #e6edf3;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  padding: 26px 24px 60px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.hitl-root ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.hitl-root ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hitl-root ::-webkit-scrollbar-thumb {
+  background: #283341;
+  border-radius: 6px;
+  border: 2px solid #0f1419;
+}
+
+.hitl-root input[type='range'] {
+  accent-color: #3b82f6;
+}
+
+@keyframes auditIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hitl-audit-entry {
+  animation: auditIn 0.25s ease;
+}
+
+.hitl-queue-row {
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.hitl-queue-row:hover td {
+  background: #1a222d;
+}
+
+.hitl-audit-entry:hover {
+  border-color: #283341 !important;
+  background: #0f1620;
+}
+
+@media (max-width: 900px) {
+  .hitl-work-surface {
+    grid-template-columns: 1fr !important;
+  }
+}

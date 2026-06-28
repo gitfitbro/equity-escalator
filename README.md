@@ -32,6 +32,8 @@ npm run tsr          # Monte Carlo TSR demo
 
 Open http://localhost:5173 → click **Issue SpaceX SPCX grants** → review the queue.
 
+The UI is ported from **Claude Design** (`client/design-source/HITL-Review-Console.dc.html`) — two-tier consultant → reviewer HITL console with live threshold slider.
+
 ### SpaceX SPCX Demo
 
 **SPCX** = illustrative SpaceX common-share unit (private company, no public ticker). Grants are valued at 409A FMV × units, then run through the HITL gate. See `docs/SPCX-MODEL.md`.

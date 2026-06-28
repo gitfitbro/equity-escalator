@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#0f1419}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:#283341;border-radius:6px;border:2px solid #0f1419}
+  input[type=range]{accent-color:#3b82f6}
+  @keyframes auditIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#0f1419;color:#e6edf3;font-family:'DM Sans',system-ui,sans-serif;padding:26px 24px 60px;font-size:14px;line-height:1.45">
+  <div style="max-width:1280px;margin:0 auto">
+
+    <!-- ORIENTATION -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:18px">
+      <div>
+        <div style="display:flex;align-items:center;gap:11px">
+          <div style="width:9px;height:9px;border-radius:50%;background:{{accent}};box-shadow:0 0 0 4px rgba(59,130,246,0.16)"></div>
+          <h1 style="margin:0;font-size:21px;font-weight:700;letter-spacing:-0.01em">HITL Review Console</h1>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b7785;border:1px solid #283341;border-radius:5px;padding:2px 7px;margin-left:2px">v0.2 · two-tier</span>
+        </div>
+        <p style="margin:7px 0 0;color:#8b98a8;font-size:13px;max-width:660px">Agentic ASC 718 classification → confidence/risk gate → preparer review → manager sign-off. SpaceX (SPCX) 409A batch.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;align-items:flex-end">
+        <div style="display:inline-flex;background:#0f1620;border:1px solid #283341;border-radius:10px;padding:3px;gap:3px">
+          <button onClick="{{setRoleConsultant}}" style="{{consultantTabStyle}}">Consultant <span style="opacity:0.65;font-weight:500">·</span> {{consultantCount}}</button>
+          <button onClick="{{setRoleReviewer}}" style="{{reviewerTabStyle}}">Reviewer <span style="opacity:0.65;font-weight:500">·</span> {{reviewerCount}}</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b7785">
+          <span style="width:7px;height:7px;border-radius:50%;background:#3fb950;box-shadow:0 0 6px #3fb950"></span>
+          synced {{lastSync}}
+        </div>
+      </div>
+    </div>
+
+    <!-- GATE BANNER -->
+    <div style="background:#12181f;border:1px solid #232c38;border-left:3px solid #d29922;border-radius:8px;padding:13px 16px;margin-bottom:16px;overflow-x:auto">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.13em;color:#6b7785;text-transform:uppercase;margin-bottom:9px">HITL routing gate</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.85;color:#c9d4df;display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;align-items:center;gap:10px;white-space:nowrap">
+          <span style="display:inline-block;min-width:42px;color:#d29922;font-weight:600">IF</span>
+          <span>(risk or $ value high) <span style="color:#d29922;font-weight:600">OR</span> (confidence <span style="color:#7d8896">&lt;</span> threshold)</span>
+          <span style="color:#7d8896">→</span>
+          <span style="color:#f0883e;background:rgba(240,136,62,0.13);padding:1px 7px;border-radius:4px">route to consultant</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;white-space:nowrap">
+          <span style="display:inline-block;min-width:42px;color:#d29922;font-weight:600">ELSE</span>
+          <span style="color:#7d8896">→</span>
+          <span style="color:#3fb950;background:rgba(63,185,80,0.12);padding:1px 7px;border-radius:4px">auto-approve</span>
+          <span style="color:#7d8896">→</span>
+          <span style="color:#9aa7b5">still surfaces to manager for spot-check</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALUATION PANEL -->
+    <div style="background:linear-gradient(135deg,#161e29 0%,#131922 60%,#141b25 100%);border:1px solid #232c38;border-radius:10px;padding:18px 20px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:46px;height:46px;border-radius:9px;background:#0f1419;border:1px solid #2b3644;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:{{accent}}">SPCX</div>
+          <div>
+            <div style="font-size:16px;font-weight:600">SpaceX Common</div>
+            <div style="color:#8b98a8;font-size:12.5px;margin-top:1px">Private · Section 409A fair-value anchor</div>
+          </div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#3fb950;background:rgba(63,185,80,0.1);border:1px solid rgba(63,185,80,0.25);border-radius:6px;padding:5px 10px">409A · eff. Mar 31 2026</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px">
+        <div style="background:#0f1620;border:1px solid #222c38;border-radius:8px;padding:13px 15px">
+          <div style="color:#6b7785;font-size:11px;letter-spacing:0.06em;text-transform:uppercase">FMV / share</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;margin-top:5px">$112.00</div>
+        </div>
+        <div style="background:#0f1620;border:1px solid #222c38;border-radius:8px;padding:13px 15px">
+          <div style="color:#6b7785;font-size:11px;letter-spacing:0.06em;text-transform:uppercase">Shares outstanding</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;margin-top:5px">1.74B</div>
+        </div>
+        <div style="background:#0f1620;border:1px solid #222c38;border-radius:8px;padding:13px 15px">
+          <div style="color:#6b7785;font-size:11px;letter-spacing:0.06em;text-transform:uppercase">Implied equity value</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;margin-top:5px">$194.9B</div>
+        </div>
+      </div>
+      <div style="font-style:italic;color:#5c6775;font-size:11.5px;margin-top:13px">Illustrative 409A inputs for demonstration only. Not a valuation opinion.</div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div style="background:#141a22;border:1px solid #232c38;border-radius:10px;padding:16px 18px;margin-bottom:16px;display:flex;gap:22px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <label style="font-size:11px;color:#6b7785;letter-spacing:0.05em;text-transform:uppercase">Reviewer identity</label>
+        <input value="{{reviewer}}" onInput="{{setReviewer}}" style="background:#0f1620;border:1px solid #2b3644;border-radius:7px;color:#e6edf3;font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:8px 11px;width:240px;outline:none" />
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;min-width:300px;flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <label style="font-size:11px;color:#6b7785;letter-spacing:0.05em;text-transform:uppercase">Confidence threshold</label>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:{{accent}}">{{threshold}}%</span>
+        </div>
+        <input type="range" min="50" max="95" step="1" value="{{threshold}}" onInput="{{setThreshold}}" style="width:100%;accent-color:{{accent}}" />
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#8b98a8">
+          <span style="color:#3fb950">{{autoCount}}</span> would auto-approve · <span style="color:#f0883e">{{escalateCount}}</span> would escalate
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+        <div style="display:flex;gap:9px">
+          <button onClick="{{seed}}" style="background:{{accent}};color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:10px 16px;cursor:pointer">Issue SpaceX SPCX grants</button>
+          <button onClick="{{refresh}}" style="background:transparent;color:#9aa7b5;border:1px solid #2b3644;border-radius:8px;font-weight:500;font-size:13px;padding:10px 14px;cursor:pointer">Refresh</button>
+        </div>
+        <sc-if value="{{seeded}}" hint-placeholder-val="{{true}}">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#3fb950;background:rgba(63,185,80,0.1);border:1px solid rgba(63,185,80,0.22);border-radius:6px;padding:5px 10px">✓ {{seedStatus}}</div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- WORK SURFACE -->
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start">
+
+      <!-- QUEUE -->
+      <div style="background:#141a22;border:1px solid #232c38;border-radius:10px;overflow:hidden;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #222c38;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-weight:600;font-size:14px">{{queueTitle}}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:{{queueBadgeColor}};background:{{queueBadgeBg}};border-radius:11px;padding:2px 9px">{{queueCount}} {{queueBadgeWord}}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;font-size:11.5px;color:#6b7785">
+            <span>{{queueSubtitle}}</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:#3fb950">✓ {{finalizedCount}} finalized</span>
+          </div>
+        </div>
+
+        <sc-if value="{{hasQueue}}" hint-placeholder-val="{{true}}">
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+              <thead>
+                <tr style="color:#6b7785;font-size:10.5px;letter-spacing:0.05em;text-transform:uppercase;text-align:left">
+                  <th style="padding:11px 14px;font-weight:500">Employee</th>
+                  <th style="padding:11px 10px;font-weight:500">Grant (raw → agent)</th>
+                  <th style="padding:11px 10px;font-weight:500;text-align:right">SPCX units / FV</th>
+                  <th style="padding:11px 10px;font-weight:500">Confidence</th>
+                  <th style="padding:11px 10px;font-weight:500">Risk</th>
+                  <th style="padding:11px 10px;font-weight:500">{{detailHeader}}</th>
+                  <th style="padding:11px 14px;font-weight:500;text-align:right">Decision</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{queueItems}}" as="item" hint-placeholder-count="3">
+                  <tr style="{{item.rowStyle}}" style-hover="background:#1a222d">
+                    <td style="padding:13px 14px;border-top:1px solid #1d2630;vertical-align:top">
+                      <div style="font-weight:600;color:#e6edf3">{{item.employee}}</div>
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b7785;margin-top:2px">{{item.meta}}</div>
+                    </td>
+                    <td style="padding:13px 10px;border-top:1px solid #1d2630;vertical-align:top;font-family:'JetBrains Mono',monospace;font-size:12.5px;white-space:nowrap">
+                      <sc-if value="{{item.changed}}" hint-placeholder-val="{{true}}">
+                        <span style="color:#6b7785;text-decoration:line-through;text-decoration-color:#3a4654">{{item.rawType}}</span>
+                        <span style="color:#5c6775"> → </span>
+                      </sc-if>
+                      <span style="color:#e6edf3;font-weight:600">{{item.predType}}</span>
+                    </td>
+                    <td style="padding:13px 10px;border-top:1px solid #1d2630;vertical-align:top;text-align:right;font-family:'JetBrains Mono',monospace;white-space:nowrap">
+                      <div style="color:#c9d4df">{{item.units}}</div>
+                      <div style="color:#7d8896;font-size:11.5px;margin-top:2px">{{item.fair}}</div>
+                    </td>
+                    <td style="padding:13px 10px;border-top:1px solid #1d2630;vertical-align:top">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:44px;height:6px;border-radius:3px;background:#222c38;overflow:hidden;flex-shrink:0">
+                          <div style="height:100%;width:{{item.confWidth}};background:{{item.confColor}};border-radius:3px"></div>
+                        </div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:{{item.confColor}}">{{item.confPct}}</span>
+                      </div>
+                    </td>
+                    <td style="padding:13px 10px;border-top:1px solid #1d2630;vertical-align:top">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:{{item.riskColor}};background:{{item.riskBg}};border-radius:5px;padding:3px 8px">{{item.riskLabel}}</span>
+                    </td>
+                    <td style="padding:13px 10px;border-top:1px solid #1d2630;vertical-align:top;min-width:196px;max-width:230px">
+                      <sc-if value="{{item.hasBadge}}" hint-placeholder-val="{{false}}">
+                        <span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:0.04em;color:{{item.badgeColor}};background:{{item.badgeBg}};border:1px solid {{item.badgeBorder}};border-radius:4px;padding:2px 6px;margin-bottom:5px">{{item.badgeLabel}}</span>
+                      </sc-if>
+                      <div style="font-size:11.5px;color:#aab6c2;line-height:1.45">{{item.reasonPrimary}}</div>
+                      <sc-if value="{{item.hasSecondary}}" hint-placeholder-val="{{false}}">
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6b7785;margin-top:3px">{{item.reasonSecondary}}</div>
+                      </sc-if>
+                    </td>
+                    <td style="padding:13px 14px;border-top:1px solid #1d2630;vertical-align:top;text-align:right;white-space:nowrap">
+                      <div style="display:inline-flex;gap:5px">
+                        <sc-for list="{{item.actions}}" as="act" hint-placeholder-count="2">
+                          <button onClick="{{act.onClick}}" style="background:{{act.bg}};color:{{act.color}};border:{{act.border}};border-radius:6px;font-family:'DM Sans',sans-serif;font-weight:{{act.weight}};font-size:12px;padding:6px 10px;cursor:pointer;white-space:nowrap">{{act.label}}</button>
+                        </sc-for>
+                      </div>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}">
+          <div style="padding:54px 24px;text-align:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:34px;color:#2b3644;margin-bottom:14px">{ }</div>
+            <div style="color:#8b98a8;font-size:13.5px;max-width:420px;margin:0 auto">{{emptyMsg}}</div>
+          </div>
+        </sc-if>
+      </div>
+
+      <!-- AUDIT SIDEBAR -->
+      <div style="background:#141a22;border:1px solid #232c38;border-radius:10px;position:sticky;top:16px;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #222c38">
+          <span style="font-weight:600;font-size:13.5px">Audit trail</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6b7785;border:1px solid #283341;border-radius:5px;padding:2px 7px">chain of custody</span>
+        </div>
+        <div style="max-height:540px;overflow-y:auto;padding:6px 6px 10px" data-comment-anchor="bda4e398bd-div">
+          <sc-if value="{{hasAudit}}" hint-placeholder-val="{{false}}">
+            <sc-for list="{{auditEntries}}" as="ev" hint-placeholder-count="4">
+              <div style="padding:10px 12px;border-radius:7px;border:1px solid transparent;border-left:2px solid {{ev.typeColor}};animation:auditIn .25s ease;margin-bottom:1px" style-hover="border-color:#283341;background:#0f1620">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:{{ev.typeColor}};letter-spacing:0.02em">{{ev.type}}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5c6775">{{ev.ts}}</span>
+                </div>
+                <div style="font-size:12px;color:#aab6c2;margin-top:4px;line-height:1.45">{{ev.detail}}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5c6775;margin-top:3px">{{ev.item}}</div>
+              </div>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{noAudit}}" hint-placeholder-val="{{true}}">
+            <div style="min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 18px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:34px;color:#2b3644;margin-bottom:14px">{ }</div>
+              <div style="color:#8b98a8;font-size:13px;max-width:220px;line-height:1.5">No events yet. Issue a batch to populate the chain of custody.</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:1000},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#3b82f6&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;showWhyEscalated&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Queue&quot;}}">
+class Component extends DCLogic {
+  state = {
+    reviewer: 'consultant@equitymethods.com',
+    threshold: 80,
+    role: 'consultant',
+    seeded: false,
+    seedStatus: '',
+    batch: [],
+    audit: [],
+    lastSync: '—',
+  };
+
+  // raw / agent-predicted grant types, mechanical vs judgment reasons (ASC 718)
+  SEED = [
+    { id:'GRT-26-0418', employee:'Maya Chen',      empId:'EMP-4471', dept:'Engineering', rawType:'RSU', predType:'RSU', units:8500,  conf:94, risk:'low',
+      mech:'Standard RSU · straight-line over stated service period · mechanical recognition' },
+    { id:'GRT-26-0419', employee:'Liam Foster',    empId:'EMP-2884', dept:'Engineering', rawType:'NSO', predType:'NSO', units:6000,  conf:91, risk:'low',
+      mech:'Vanilla option · four Black-Scholes-Merton inputs assembled · within confidence band' },
+    { id:'GRT-26-0420', employee:'David Okonkwo',  empId:'EMP-3920', dept:'Sales',       rawType:'RSU', predType:'RSU', units:3200,  conf:88, risk:'low',
+      mech:'Standard RSU · straight-line recognition · within confidence band' },
+    { id:'GRT-26-0421', employee:'Noah Kim',       empId:'EMP-3345', dept:'Product',     rawType:'ISO', predType:'ISO', units:4500,  conf:86, risk:'low',
+      mech:'Vanilla option · Black-Scholes-Merton inputs assembled · mechanical journal entries' },
+    { id:'GRT-26-0422', employee:'Elena Petrova',  empId:'EMP-7788', dept:'Executive',   rawType:'PSU', predType:'PSU', units:95000, conf:64, risk:'high',
+      esc:'Market condition present (relative TSR) — requires Monte Carlo, not Black-Scholes-Merton; valuation assumptions need human review' },
+    { id:'GRT-26-0423', employee:'Priya Nair',     empId:'EMP-5102', dept:'Finance',     rawType:'RSU', predType:'SAR', units:45000, conf:58, risk:'high',
+      esc:'Possible liability classification: cash-settlement feature flagged — equity vs. liability is a consequential human judgment' },
+    { id:'GRT-26-0424', employee:'Sofia Alvarez',  empId:'EMP-6210', dept:'Operations',  rawType:'PSU', predType:'PSU', units:27500, conf:72, risk:'med',
+      esc:'Performance condition — probability-of-achievement assessment required before expense recognition' },
+    { id:'GRT-26-0425', employee:'Marcus Webb',    empId:'EMP-6677', dept:'Engineering', rawType:'ISO', predType:'NSO', units:18000, conf:76, risk:'med',
+      esc:'Expected volatility assumption outside confidence band · agent reclassified ISO→NSO — defend or adjust' },
+  ];
+
+  FMV = 112;
+
+  componentDidMount() {
+    this.setState({ lastSync: this._now() });
+    this._timer = setInterval(() => this.setState({ lastSync: this._now() }), 5000);
+  }
+  componentWillUnmount() { clearInterval(this._timer); }
+
+  _now() { return new Date().toTimeString().slice(0, 8); }
+  _money(n) { return '$' + n.toLocaleString('en-US'); }
+  _units(n) { return n.toLocaleString('en-US'); }
+  _who() { return (this.state.reviewer || 'reviewer').split('@')[0]; }
+  _gate(it, t) { return it.conf < t || it.risk === 'high'; }
+
+  seed = () => {
+    const t = this.state.threshold;
+    const items = this.SEED.map(it => ({ ...it }));
+    const audit = [];
+    items.forEach(it => {
+      const esc = this._gate(it, t);
+      it.status = esc ? 'pending_consultant' : 'pending_reviewer';
+      it.auto = !esc;
+      it.disp = null;        // consultant disposition
+      it.returned = false;
+      audit.push({
+        ts: this._now(), type: 'routing_decision', item: it.id,
+        detail: esc
+          ? '→ consultant · conf ' + it.conf + '%' + (it.risk === 'high' ? ' · high-risk' : '')
+          : 'auto-approved → manager spot-check · conf ' + it.conf + '%',
+      });
+    });
+    const esc = items.filter(it => it.status === 'pending_consultant').length;
+    const auto = items.length - esc;
+    audit.push({ ts: this._now(), type: 'batch_ingested', item: 'SPCX-BATCH-0426', detail: items.length + ' SPCX grants classified by agent' });
+    this.setState({
+      seeded: true, batch: items, audit: audit.reverse(),
+      seedStatus: auto + ' auto-approved · ' + esc + ' escalated to consultant',
+    });
+  };
+
+  refresh = () => this.setState({ lastSync: this._now() });
+  setReviewer = (e) => this.setState({ reviewer: e.target.value });
+  setRoleConsultant = () => this.setState({ role: 'consultant' });
+  setRoleReviewer = () => this.setState({ role: 'reviewer' });
+
+  setThreshold = (e) => {
+    const t = +e.target.value;
+    const batch = this.state.batch.map(it => {
+      const untouched = it.disp == null && (it.status === 'pending_consultant' || it.status === 'pending_reviewer');
+      if (untouched) {
+        const esc = this._gate(it, t);
+        return { ...it, status: esc ? 'pending_consultant' : 'pending_reviewer', auto: !esc };
+      }
+      return it;
+    });
+    this.setState({ threshold: t, batch });
+  };
+
+  _animateOut(id, finalize) {
+    this._timers = this._timers || {};
+    if (this._timers[id]) return;
+    this.setState(s => ({ batch: s.batch.map(it => it.id === id ? { ...it, leaving: true } : it) }));
+    this._timers[id] = setTimeout(() => { finalize(); delete this._timers[id]; }, 300);
+  }
+
+  consultantAct(id, kind) {
+    this._animateOut(id, () => {
+      const item = this.state.batch.find(it => it.id === id);
+      const who = this._who();
+      let status, disp = item.disp, detail;
+      if (kind === 'approved') { status = 'pending_reviewer'; disp = 'approved'; detail = 'approved (' + item.predType + ') by ' + who; }
+      else if (kind === 'overridden') { status = 'pending_reviewer'; disp = 'overridden'; detail = 'override · classification / assumption corrected by ' + who; }
+      else { status = 'sent_back'; detail = 'sent back to client for more info by ' + who; }
+      const entry = { ts: this._now(), type: 'consultant_review', item: id, detail };
+      this.setState(s => ({
+        batch: s.batch.map(it => it.id === id ? { ...it, status, disp, auto: false, leaving: false } : it),
+        audit: [entry, ...s.audit],
+      }));
+    });
+  }
+
+  reviewerAct(id, kind) {
+    this._animateOut(id, () => {
+      const item = this.state.batch.find(it => it.id === id);
+      const who = this._who();
+      let status, detail;
+      if (kind === 'finalized') {
+        status = 'finalized';
+        detail = 'finalized & locked by ' + who + (item.auto && item.disp == null ? ' (spot-check of agent auto-approval)' : '');
+      } else {
+        status = 'pending_consultant';
+        detail = 'returned to consultant by ' + who;
+      }
+      const entry = { ts: this._now(), type: 'reviewer_signoff', item: id, detail };
+      this.setState(s => ({
+        batch: s.batch.map(it => it.id === id ? { ...it, status, returned: kind === 'returned' ? true : it.returned, disp: kind === 'returned' ? null : it.disp, leaving: false } : it),
+        audit: [entry, ...s.audit],
+      }));
+    });
+  }
+
+  renderVals() {
+    const accent = this.props.accent ?? '#3b82f6';
+    const showWhy = this.props.showWhyEscalated ?? true;
+    const role = this.state.role;
+    const t = this.state.threshold;
+    const band = c => c >= 80 ? '#3fb950' : (c >= 60 ? '#d29922' : '#f85149');
+    const riskMap = {
+      low:  { l: 'Low',    c: '#3fb950', bg: 'rgba(63,185,80,0.13)' },
+      med:  { l: 'Medium', c: '#d29922', bg: 'rgba(210,153,34,0.13)' },
+      high: { l: 'High',   c: '#f85149', bg: 'rgba(248,81,73,0.13)' },
+    };
+    const A = {
+      primary: { bg: accent, color: '#fff', border: 'none', weight: 600 },
+      neutral: { bg: 'transparent', color: '#9aa7b5', border: '1px solid #2f3a48', weight: 500 },
+      warn:    { bg: 'transparent', color: '#cf6b63', border: '1px solid rgba(248,81,73,0.32)', weight: 500 },
+    };
+    const mkAct = (label, style, onClick) => ({ label, onClick, bg: style.bg, color: style.color, border: style.border, weight: style.weight });
+
+    const base = it => {
+      const rk = riskMap[it.risk] || riskMap.low;
+      return {
+        id: it.id, employee: it.employee, meta: it.empId + ' · ' + it.dept,
+        rawType: it.rawType, predType: it.predType, changed: it.rawType !== it.predType,
+        units: this._units(it.units), fair: this._money(it.units * this.FMV),
+        confPct: it.conf + '%', confWidth: it.conf + '%', confColor: band(it.conf),
+        riskLabel: rk.l, riskColor: rk.c, riskBg: rk.bg,
+        rowStyle: {
+          transition: 'opacity .28s ease, transform .28s ease',
+          opacity: it.leaving ? 0 : 1,
+          transform: it.leaving ? 'translateX(14px)' : 'none',
+        },
+      };
+    };
+
+    let queueRaw, queueItems;
+    if (role === 'consultant') {
+      queueRaw = this.state.batch.filter(it => it.status === 'pending_consultant')
+        .sort((a, b) => a.conf - b.conf);
+      queueItems = queueRaw.map(it => {
+        const reasons = [];
+        if (it.risk === 'high') reasons.push('risk: high');
+        if (it.conf < t) reasons.push('conf ' + it.conf + '% < ' + t + '%');
+        return {
+          ...base(it),
+          hasBadge: !!it.returned, badgeLabel: 'RETURNED BY REVIEWER',
+          badgeColor: '#e0a13a', badgeBg: 'rgba(224,161,58,0.12)', badgeBorder: 'rgba(224,161,58,0.3)',
+          reasonPrimary: showWhy ? (it.esc || 'Manual hold') : '—',
+          hasSecondary: showWhy && reasons.length > 0, reasonSecondary: 'gate: ' + reasons.join(' · '),
+          actions: [
+            mkAct('Approve', A.primary, () => this.consultantAct(it.id, 'approved')),
+            mkAct('Override', A.neutral, () => this.consultantAct(it.id, 'overridden')),
+            mkAct('Send back', A.warn, () => this.consultantAct(it.id, 'sent_back')),
+          ],
+        };
+      });
+    } else {
+      queueRaw = this.state.batch.filter(it => it.status === 'pending_reviewer')
+        .sort((a, b) => (a.auto === b.auto ? a.conf - b.conf : (a.auto ? -1 : 1)));
+      queueItems = queueRaw.map(it => {
+        let badge, primary;
+        if (it.auto && it.disp == null) {
+          badge = { l: 'AUTO · NO HUMAN TOUCH', c: '#f0883e', bg: 'rgba(240,136,62,0.12)', b: 'rgba(240,136,62,0.32)' };
+          primary = it.mech || 'Mechanical recognition · agent auto-approved';
+        } else if (it.disp === 'overridden') {
+          badge = { l: 'CONSULTANT · OVERRIDDEN', c: '#7fa8e6', bg: 'rgba(91,135,196,0.14)', b: 'rgba(91,135,196,0.34)' };
+          primary = it.esc || 'Judgment item · consultant corrected and approved';
+        } else {
+          badge = { l: 'CONSULTANT · APPROVED', c: '#5fbf78', bg: 'rgba(63,185,80,0.12)', b: 'rgba(63,185,80,0.3)' };
+          primary = it.esc || 'Judgment item · consultant approved';
+        }
+        return {
+          ...base(it),
+          hasBadge: true, badgeLabel: badge.l, badgeColor: badge.c, badgeBg: badge.bg, badgeBorder: badge.b,
+          reasonPrimary: primary, hasSecondary: false, reasonSecondary: '',
+          actions: [
+            mkAct('Finalize', A.primary, () => this.reviewerAct(it.id, 'finalized')),
+            mkAct('Return', A.neutral, () => this.reviewerAct(it.id, 'returned')),
+          ],
+        };
+      });
+    }
+
+    const escalateCount = this.state.batch.filter(it => this._gate(it, t)).length;
+    const autoCount = this.state.batch.length - escalateCount;
+    const consultantCount = this.state.batch.filter(it => it.status === 'pending_consultant').length;
+    const reviewerCount = this.state.batch.filter(it => it.status === 'pending_reviewer').length;
+    const finalizedCount = this.state.batch.filter(it => it.status === 'finalized').length;
+
+    const typeColor = {
+      routing_decision: '#5b87c4', batch_ingested: '#7d8896',
+      consultant_review: '#e0a13a', reviewer_signoff: '#3fb950',
+    };
+    const auditEntries = this.state.audit.map(ev => ({ ...ev, typeColor: typeColor[ev.type] || '#8b98a8' }));
+
+    const isC = role === 'consultant';
+    const tabBase = 'font-family:DM Sans;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;border:none;';
+    const activeTab = { background: accent, color: '#fff', border: 'none', borderRadius: '7px', cursor: 'pointer', fontWeight: 600, fontSize: '12.5px', padding: '7px 14px', fontFamily: 'DM Sans', whiteSpace: 'nowrap' };
+    const idleTab = { background: 'transparent', color: '#9aa7b5', border: 'none', borderRadius: '7px', cursor: 'pointer', fontWeight: 600, fontSize: '12.5px', padding: '7px 14px', fontFamily: 'DM Sans', whiteSpace: 'nowrap' };
+
+    const hasQueue = queueItems.length > 0;
+    return {
+      accent, reviewer: this.state.reviewer, threshold: t,
+      seeded: this.state.seeded, seedStatus: this.state.seedStatus, lastSync: this.state.lastSync,
+      seed: this.seed, refresh: this.refresh, setReviewer: this.setReviewer, setThreshold: this.setThreshold,
+      setRoleConsultant: this.setRoleConsultant, setRoleReviewer: this.setRoleReviewer,
+      consultantTabStyle: isC ? activeTab : idleTab, reviewerTabStyle: isC ? idleTab : activeTab,
+      consultantCount, reviewerCount, finalizedCount, autoCount, escalateCount,
+      queueItems, queueCount: queueRaw.length,
+      queueTitle: isC ? 'Consultant queue' : 'Reviewer queue',
+      queueSubtitle: isC ? 'checkpoint 1 · preparer review' : 'checkpoint 2 · manager sign-off',
+      queueBadgeWord: isC ? 'escalated' : 'awaiting sign-off',
+      queueBadgeColor: isC ? '#f0883e' : '#7fa8e6',
+      queueBadgeBg: isC ? 'rgba(240,136,62,0.12)' : 'rgba(91,135,196,0.14)',
+      detailHeader: isC ? 'Why escalated (ASC 718)' : 'Provenance',
+      hasQueue, showEmpty: !hasQueue,
+      emptyMsg: !this.state.seeded
+        ? 'Queue empty — click "Issue SpaceX SPCX grants" to load the demo batch.'
+        : (isC
+            ? 'Consultant queue clear — all escalations handled. Switch to Reviewer to sign off.'
+            : 'Reviewer queue clear — every item finalized or returned. Audit trail retained.'),
+      auditEntries, hasAudit: auditEntries.length > 0, noAudit: auditEntries.length === 0,
+    };
+  }
+}
+</script>
+</body>
+</html>
