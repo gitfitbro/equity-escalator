@@ -76,7 +76,6 @@ export default function HitlReviewConsole() {
   const [threshold, setThreshold] = useState(80);
   const [role, setRole] = useState<Role>('consultant');
   const [seeded, setSeeded] = useState(false);
-  const [seedStatus, setSeedStatus] = useState('');
   const [batch, setBatch] = useState<BatchItem[]>([]);
   const [audit, setAudit] = useState<AuditEvent[]>([]);
   const [lastSync, setLastSync] = useState('—');
@@ -124,8 +123,6 @@ export default function HitlReviewConsole() {
       });
     });
 
-    const escCount = items.filter((it) => it.status === 'pending_consultant').length;
-    const autoCount = items.length - escCount;
     events.push({
       ts: nowTime(),
       type: 'batch_ingested',
@@ -136,7 +133,6 @@ export default function HitlReviewConsole() {
     setSeeded(true);
     setBatch(items);
     setAudit(events.reverse());
-    setSeedStatus(`${autoCount} auto-approved · ${escCount} escalated to consultant`);
   };
 
   const handleThreshold = (t: number) => {
@@ -245,6 +241,11 @@ export default function HitlReviewConsole() {
     [animateOut, who],
   );
 
+  const previewRouting = useMemo(() => {
+    const escalate = SEED_GRANTS.filter((it) => gate(it, threshold)).length;
+    return { auto: SEED_GRANTS.length - escalate, escalate };
+  }, [threshold]);
+
   const counts = useMemo(() => {
     const escalateCount = batch.filter((it) => gate(it, threshold)).length;
     return {
@@ -255,6 +256,10 @@ export default function HitlReviewConsole() {
       finalizedCount: batch.filter((it) => it.status === 'finalized').length,
     };
   }, [batch, threshold]);
+
+  const routingSummary = seeded
+    ? { auto: counts.autoCount, escalate: counts.escalateCount }
+    : previewRouting;
 
   const { queueItems, queueCount } = useMemo(() => {
     const band = (c: number) =>
@@ -710,63 +715,31 @@ export default function HitlReviewConsole() {
               onChange={(e) => handleThreshold(+e.target.value)}
               style={{ width: '100%', accentColor: ACCENT }}
             />
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, color: '#8b98a8' }}>
-              <span style={{ color: '#3fb950' }}>{counts.autoCount}</span> would auto-approve ·{' '}
-              <span style={{ color: '#f0883e' }}>{counts.escalateCount}</span> would escalate
+            <div
+              className="hitl-routing-summary"
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7785' }}
+            >
+              {!seeded ? 'Preview' : 'Routed'} @ {threshold}% ·{' '}
+              <span style={{ color: '#3fb950' }}>{routingSummary.auto}</span> → reviewer ·{' '}
+              <span style={{ color: '#f0883e' }}>{routingSummary.escalate}</span> → consultant
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
-            <div style={{ display: 'flex', gap: 9 }}>
-              <button
-                type="button"
-                onClick={handleSeed}
-                style={{
-                  background: ACCENT,
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 8,
-                  fontFamily: 'DM Sans, sans-serif',
-                  fontWeight: 600,
-                  fontSize: 13,
-                  padding: '8px 12px',
-                  cursor: 'pointer',
-                }}
-              >
-                Issue SpaceX SPCX grants
-              </button>
-              <button
-                type="button"
-                onClick={() => setLastSync(nowTime())}
-                style={{
-                  background: 'transparent',
-                  color: '#9aa7b5',
-                  border: '1px solid #2b3644',
-                  borderRadius: 8,
-                  fontWeight: 500,
-                  fontSize: 13,
-                  padding: '8px 12px',
-                  cursor: 'pointer',
-                }}
-              >
-                Refresh
-              </button>
-            </div>
-            {seeded && (
-              <div
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 11.5,
-                  color: '#3fb950',
-                  background: 'rgba(63,185,80,0.1)',
-                  border: '1px solid rgba(63,185,80,0.22)',
-                  borderRadius: 6,
-                  padding: '5px 10px',
-                }}
-              >
-                ✓ {seedStatus}
-              </div>
-            )}
+          <div className="hitl-controls-actions">
+            <button
+              type="button"
+              onClick={handleSeed}
+              className="hitl-btn hitl-btn--primary"
+            >
+              {seeded ? 'Re-issue SPCX batch' : 'Issue SpaceX SPCX grants'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setLastSync(nowTime())}
+              className="hitl-btn hitl-btn--ghost"
+            >
+              Refresh
+            </button>
           </div>
         </div>
 

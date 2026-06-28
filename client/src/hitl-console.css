@@ -92,6 +92,45 @@ body,
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
+.hitl-controls-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.hitl-btn {
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.hitl-btn--primary {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+}
+
+.hitl-btn--primary:hover {
+  background: #2563eb;
+}
+
+.hitl-btn--ghost {
+  background: transparent;
+  color: #9aa7b5;
+  border: 1px solid #2b3644;
+  font-weight: 500;
+}
+
+.hitl-routing-summary {
+  line-height: 1.35;
+}
+
 .hitl-work-surface {
   flex: 1;
   min-height: 0;
