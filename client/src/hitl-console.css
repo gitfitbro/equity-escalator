@@ -13,6 +13,7 @@ body,
 }
 
 .hitl-root {
+  box-sizing: border-box;
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
@@ -21,7 +22,7 @@ body,
   background: #0f1419;
   color: #e6edf3;
   font-family: 'DM Sans', system-ui, sans-serif;
-  padding: 10px 14px;
+  padding: 10px 14px max(14px, env(safe-area-inset-bottom, 0px));
   font-size: 13px;
   line-height: 1.4;
 }
@@ -64,6 +65,7 @@ body,
   grid-template-columns: minmax(0, 1fr) 300px;
   gap: 10px;
   align-items: stretch;
+  padding-bottom: 2px;
 }
 
 .hitl-queue-panel,
@@ -86,6 +88,7 @@ body,
   flex: 1;
   min-height: 0;
   overflow: auto;
+  padding-bottom: 6px;
 }
 
 .hitl-audit-scroll {
@@ -93,7 +96,7 @@ body,
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 4px 6px 8px;
+  padding: 4px 6px 12px;
 }
 
 .hitl-root ::-webkit-scrollbar {
