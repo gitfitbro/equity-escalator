@@ -1,0 +1,22 @@
+{
+  "name": "equity-escalator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HITL review loop + Equity Methods coding challenges",
+  "workspaces": [
+    "server",
+    "client",
+    "challenges"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w server && npm run build -w client",
+    "test": "npm run test -w challenges",
+    "tsr": "npx tsx scripts/monte-carlo-tsr.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
